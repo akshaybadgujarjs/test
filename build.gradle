@@ -1,0 +1,52 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.4.13'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+ext{
+    lombokVersion = '1.18.24'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	// https://mvnrepository.com/artifact/org.testng/testng
+    implementation group: 'org.testng', name: 'testng', version: '7.0.0'
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    // To build a Fat Jar we have to alter jar task's default behaviour.
+    // Following lines will iterate over runtime dependencies of this project
+    // and if a dependency is a directory (for example src/) it will add it
+    // directly. If a dependency is a zip or jar file it will unpack those
+    // files and adds its content to the final jar file.
+    enabled=true
+    zip64 true
+    from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+tasks.withType(Jar) {
+   duplicatesStrategy = DuplicatesStrategy.WARN
+}
