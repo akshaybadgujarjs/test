@@ -5,7 +5,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-@Slf4jgit
+@Slf4j
 public class PulsarTestsSample {
 
     public PulsarTestsSample() {
